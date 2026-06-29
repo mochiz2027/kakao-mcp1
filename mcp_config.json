@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "pet_voice_on_mcp": {
+      "command": "C:/Users/ledpa/AppData/Local/Programs/Python/Python310/python.exe",
+      "args": [
+        "d:/AIwork/Anti-Graffiti/kakao-mcp1/server.py"
+      ]
+    }
+  }
+}

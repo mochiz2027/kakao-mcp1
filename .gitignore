@@ -1,0 +1,24 @@
+# 환경 변수 및 설정 파일
+.env
+
+# 파이썬 캐시 및 컴파일 파일
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 가상 환경
+venv/
+.venv/
+
+# 오디오 테스트 파일 (용량 큰 파일 제외)
+*.wav
+*.mp3
+*.flac
+
+# 운영체제 임시 파일
+.DS_Store
+Thumbs.db
+
+# IDE 설정
+.idea/
+.vscode/
