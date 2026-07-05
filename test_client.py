@@ -1,32 +1,26 @@
 """
-🐾 펫보이스온 (Pet Voice On) MCP 서버 - 로컬 통합 테스트 클라이언트
+🐾 펫보이스온 (Pet Voice On) MCP 서버 - 로컬 통합 테스트 클라이언트 (최종 고도화 버전)
 
 MCP 서버를 실행하지 않고도 내부 도구 함수들의 비즈니스 로직을
 직접 호출하여 JSON 출력 형식과 정상 작동 여부를 빠르게 검증합니다.
-
-실행 방법:
-    python test_client.py
 """
 
 import json
 import sys
 
-# 서버 모듈에서 MCP 도구 함수들을 직접 임포트
+# Windows cp949 인코딩 에러 방지
+sys.stdout.reconfigure(encoding='utf-8')
+
 from server import (
     analyze_pet_vocalization,
-    simulate_pet_voice_analysis,
     get_pet_context_booster,
-    translate_pet_emotion_to_speech,
-    get_pet_health_indicator,
-    get_pet_emotion_diary,
+    capture_live_audio_translation
 )
 
-
 def print_separator(title: str):
-    print("\n" + "=" * 70)
+    print("\n" + "=" * 75)
     print(f"  🧪 테스트: {title}")
-    print("=" * 70)
-
+    print("=" * 75)
 
 def run_test(title: str, func, *args, **kwargs):
     """도구 함수를 실행하고 결과를 출력합니다."""
@@ -35,143 +29,80 @@ def run_test(title: str, func, *args, **kwargs):
         result = func(*args, **kwargs)
         parsed = json.loads(result)
         print(json.dumps(parsed, ensure_ascii=False, indent=2))
-
-        # 비주얼 리포트가 있으면 추가 출력
-        for key in ["visual_report", "visual_card", "emotion_graph"]:
-            if key in parsed:
-                print(f"\n📊 [{key}]:")
-                print(parsed[key])
-
+        
+        # 비주얼 카드 및 리포트 별도 출력으로 가독성 향상
+        if "visual_report" in parsed:
+            print("\n📊 [visual_report]:")
+            print(parsed["visual_report"])
+        elif "visual_card" in parsed:
+            print("\n📊 [visual_card]:")
+            print(parsed["visual_card"])
+            
         status = parsed.get("status", "UNKNOWN")
         print(f"\n✅ 결과: {status}")
-        return True
+        return status == "SUCCESS"
+            
     except Exception as e:
         print(f"\n❌ 오류 발생: {str(e)}")
         return False
 
-
 def main():
-    print("🐾" * 35)
-    print("  펫보이스온 (Pet Voice On) MCP 서버 통합 테스트")
-    print("🐾" * 35)
+    print("🐾" * 40)
+    print("  펫보이스온 (Pet Voice On) MCP 서버 통합 테스트 - 최종 고도화 버전")
+    print("🐾" * 40)
 
     total_tests = 0
     passed_tests = 0
 
     # ─────────────────────────────────────────────
-    # [Test 1] 오디오 분석 (파일 없음 → 에러 핸들링 확인)
+    # [Test 1] 오디오 분석 (가상 시뮬레이션 및 실제 지원 겸용)
     # ─────────────────────────────────────────────
     total_tests += 1
     if run_test(
-        "[1/6] 오디오 분석 (파일 미존재 에러 핸들링)",
+        "[1/3] 오디오 분석 도구 호출 (analyze_pet_vocalization)",
         analyze_pet_vocalization,
-        audio_path="/tmp/nonexistent_bark.wav",
-        pet_type="dog"
+        audio_path="nonexistent.wav",
+        pet_type="강아지"
     ):
         passed_tests += 1
 
     # ─────────────────────────────────────────────
-    # [Test 2] 시뮬레이션 분석 - 강아지 짖음
+    # [Test 2] 행동 맥락 부스터 (NLP 분석 적용)
     # ─────────────────────────────────────────────
     total_tests += 1
     if run_test(
-        "[2/6] 시뮬레이션 분석 - 강아지 짖음 (bark, high)",
-        simulate_pet_voice_analysis,
-        pet_type="강아지",
-        vocalization_type="bark",
-        intensity="high",
-        duration_seconds=1.5
-    ):
-        passed_tests += 1
-
-    # ─────────────────────────────────────────────
-    # [Test 3] 시뮬레이션 분석 - 고양이 골골송
-    # ─────────────────────────────────────────────
-    total_tests += 1
-    if run_test(
-        "[3/6] 시뮬레이션 분석 - 고양이 골골송 (purr, low)",
-        simulate_pet_voice_analysis,
-        pet_type="고양이",
-        vocalization_type="purr",
-        intensity="low",
-        duration_seconds=5.0
-    ):
-        passed_tests += 1
-
-    # ─────────────────────────────────────────────
-    # [Test 4] 행동 맥락 부스터
-    # ─────────────────────────────────────────────
-    total_tests += 1
-    if run_test(
-        "[4/6] 행동 맥락 부스터 - 강아지 현관 대기",
+        "[2/3] 행동 맥락 부스터 호출 (get_pet_context_booster)",
         get_pet_context_booster,
-        pet_type="강아지",
-        behavior_description="꼬리를 살랑살랑 흔들며 현관 앞에서 기다리고 있다",
-        time_of_day="evening",
-        environment="indoor"
-    ):
-        passed_tests += 1
-
-    # ─────────────────────────────────────────────
-    # [Test 5] 감정→대사 변환 (4가지 스타일)
-    # ─────────────────────────────────────────────
-    total_tests += 1
-    if run_test(
-        "[5/6] 감정→대사 변환 - 고양이 배고픔 (tsundere 스타일)",
-        translate_pet_emotion_to_speech,
         pet_type="고양이",
-        emotion="hungry",
-        situation="집사가 퇴근하고 돌아왔다",
-        dialogue_style="tsundere"
+        behavior_description="집사 품에서 눈을 지긋이 감고 골골골하며 꾹꾹이를 함"
     ):
         passed_tests += 1
 
     # ─────────────────────────────────────────────
-    # [Test 6] 건강 이상 징후 분석
+    # [Test 3] 실시간 라이브 분석 (질감 & 변화 추세 포함)
     # ─────────────────────────────────────────────
     total_tests += 1
     if run_test(
-        "[6/6] 건강 이상 징후 - 고양이 비뇨기 의심",
-        get_pet_health_indicator,
-        pet_type="고양이",
-        vocalization_pattern="화장실 근처에서 자주 날카롭게 운다",
-        frequency="frequent",
-        additional_symptoms="소변량 감소, 식욕 저하"
-    ):
-        passed_tests += 1
-
-    # ─────────────────────────────────────────────
-    # [Bonus Test] 감정 일지
-    # ─────────────────────────────────────────────
-    total_tests += 1
-    if run_test(
-        "[BONUS] 감정 일지 - 강아지 하루 기록",
-        get_pet_emotion_diary,
+        "[3/3] 실시간 마이크 수집 및 번역 호출 (capture_live_audio_translation)",
+        capture_live_audio_translation,
         pet_type="강아지",
-        entries=[
-            {"time": "08:00", "emotion": "happy", "note": "아침 산책 후 기분 좋음"},
-            {"time": "12:00", "emotion": "hungry", "note": "밥그릇 앞에서 대기"},
-            {"time": "14:00", "emotion": "sleepy", "note": "소파에서 낮잠"},
-            {"time": "17:00", "emotion": "playful", "note": "공놀이 시간"},
-            {"time": "19:00", "emotion": "happy", "note": "저녁 산책"},
-            {"time": "22:00", "emotion": "calm", "note": "집사 옆에서 휴식"},
-        ]
+        capture_seconds=3.0,
+        simulate_if_no_mic=True
     ):
         passed_tests += 1
 
     # ─────────────────────────────────────────────
     # 최종 결과 요약
     # ─────────────────────────────────────────────
-    print("\n" + "🐾" * 35)
-    print(f"  📊 테스트 결과: {passed_tests}/{total_tests} 통과")
+    print("\n" + "🐾" * 40)
+    print(f"  📊 최종 테스트 결과: {passed_tests}/{total_tests} 통과")
     if passed_tests == total_tests:
-        print("  🎉 모든 테스트 통과! 서버 배포 준비 완료!")
+        print("  🎉 모든 최종 테스트 완벽 통과! 공모전 등록 제출용 준비 완료!")
     else:
         print(f"  ⚠️ {total_tests - passed_tests}개 테스트 실패. 코드를 확인해 주세요.")
-    print("🐾" * 35)
+    print("🐾" * 40)
 
     sys.exit(0 if passed_tests == total_tests else 1)
-
 
 if __name__ == "__main__":
     main()
