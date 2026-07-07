@@ -23,6 +23,7 @@ except (ImportError, OSError):
     MIC_AVAILABLE = False
 
 from mcp.server.fastmcp import FastMCP
+from mcp.types import ToolAnnotations
 
 # MCP 서버 초기화 (식별자 및 호스트/포트 지정)
 mcp = FastMCP("petVoiceOn", host="0.0.0.0", port=8080)
@@ -209,7 +210,13 @@ def _analyze_behavior_rules(pet_type: str, text: str) -> dict:
 # =====================================================================
 # [Tool 1] 🎵 반려동물 오디오 분석 도구 (실제 & 테마별 가상 겸용)
 # =====================================================================
-@mcp.tool()
+@mcp.tool(
+    description="펫보이스온 (Pet Voice On)에서 반려동물의 녹음된 오디오(.wav/.mp3)를 정밀 물리 분석합니다.",
+    annotations=ToolAnnotations(
+        category="utility",
+        tags=["audio", "analysis", "emotion"]
+    )
+)
 def analyze_pet_vocalization(audio_path: str, pet_type: str = "강아지") -> str:
     """
     반려동물의 녹음된 오디오(.wav/.mp3)를 정밀 물리 분석합니다.
@@ -325,7 +332,13 @@ def analyze_pet_vocalization(audio_path: str, pet_type: str = "강아지") -> st
 # =====================================================================
 # [Tool 2] 🐕 행동 맥락 부스터 (자연어 형태 분석 적용)
 # =====================================================================
-@mcp.tool()
+@mcp.tool(
+    description="펫보이스온 (Pet Voice On)에서 보호자가 관찰한 반려동물의 행동 맥락 정보를 분석 시스템에 결합합니다.",
+    annotations=ToolAnnotations(
+        category="utility",
+        tags=["context", "behavior"]
+    )
+)
 def get_pet_context_booster(pet_type: str, behavior_description: str) -> str:
     """
     반려동물의 현재 관찰 행동을 입력하면 수의학 행동 룰 기반으로 분석하여
@@ -387,7 +400,13 @@ def get_pet_context_booster(pet_type: str, behavior_description: str) -> str:
 # =====================================================================
 # [Tool 3] 🎙️ 실시간 마이크 캡처 및 번역 (질감 & 추세 분석 탑재)
 # =====================================================================
-@mcp.tool()
+@mcp.tool(
+    description="펫보이스온 (Pet Voice On)에서 실시간 오디오 신호를 캡처하여 LLM 기반의 1인칭 반려동물 대사로 번역합니다.",
+    annotations=ToolAnnotations(
+        category="utility",
+        tags=["live", "translation", "llm"]
+    )
+)
 def capture_live_audio_translation(
     pet_type: str = "강아지", 
     capture_seconds: float = 3.0,
