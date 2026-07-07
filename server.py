@@ -211,15 +211,18 @@ def _analyze_behavior_rules(pet_type: str, text: str) -> dict:
 # [Tool 1] 🎵 반려동물 오디오 분석 도구 (실제 & 테마별 가상 겸용)
 # =====================================================================
 @mcp.tool(
-    description="펫보이스온 (Pet Voice On)에서 반려동물의 녹음된 오디오(.wav/.mp3)를 정밀 물리 분석합니다.",
+    description="[Pet Voice On (펫보이스온)] Analyzes the recorded audio of pets (.wav/.mp3) to determine their emotion and stress levels.",
     annotations=ToolAnnotations(
-        category="utility",
-        tags=["audio", "analysis", "emotion"]
+        title="Analyze Pet Vocalization",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=False
     )
 )
 def analyze_pet_vocalization(audio_path: str, pet_type: str = "강아지") -> str:
     """
-    반려동물의 녹음된 오디오(.wav/.mp3)를 정밀 물리 분석합니다.
+    [Pet Voice On (펫보이스온)] Analyzes the recorded audio of pets (.wav/.mp3) to determine their emotion and stress levels.
     오디오 파일이 없는 경우, 가상의 음성 데이터 모델을 테마별로 다채롭게 시뮬레이션하여 
     다층 감정 분석, 스트레스 지수, 수의학 조치 팁을 담은 Visual Report를 제공합니다.
     """
@@ -333,14 +336,18 @@ def analyze_pet_vocalization(audio_path: str, pet_type: str = "강아지") -> st
 # [Tool 2] 🐕 행동 맥락 부스터 (자연어 형태 분석 적용)
 # =====================================================================
 @mcp.tool(
-    description="펫보이스온 (Pet Voice On)에서 보호자가 관찰한 반려동물의 행동 맥락 정보를 분석 시스템에 결합합니다.",
+    description="[Pet Voice On (펫보이스온)] Integrates the observed behavior context of a pet into the analysis system to boost translation accuracy.",
     annotations=ToolAnnotations(
-        category="utility",
-        tags=["context", "behavior"]
+        title="Get Pet Context Booster",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=False
     )
 )
 def get_pet_context_booster(pet_type: str, behavior_description: str) -> str:
     """
+    [Pet Voice On (펫보이스온)] Integrates the observed behavior context of a pet into the analysis system to boost translation accuracy.
     반려동물의 현재 관찰 행동을 입력하면 수의학 행동 룰 기반으로 분석하여
     감정 힌트, 스트레스 가중치 보정 및 LLM 프롬프트 가이드 카드를 리턴합니다.
     """
@@ -401,10 +408,13 @@ def get_pet_context_booster(pet_type: str, behavior_description: str) -> str:
 # [Tool 3] 🎙️ 실시간 마이크 캡처 및 번역 (질감 & 추세 분석 탑재)
 # =====================================================================
 @mcp.tool(
-    description="펫보이스온 (Pet Voice On)에서 실시간 오디오 신호를 캡처하여 LLM 기반의 1인칭 반려동물 대사로 번역합니다.",
+    description="[Pet Voice On (펫보이스온)] Captures live audio signals to translate pet sounds into first-person pet sentences using LLM.",
     annotations=ToolAnnotations(
-        category="utility",
-        tags=["live", "translation", "llm"]
+        title="Capture Live Audio Translation",
+        readOnlyHint=True,
+        destructiveHint=False,
+        idempotentHint=True,
+        openWorldHint=False
     )
 )
 def capture_live_audio_translation(
@@ -413,6 +423,7 @@ def capture_live_audio_translation(
     simulate_if_no_mic: bool = True
 ) -> str:
     """
+    [Pet Voice On (펫보이스온)] Captures live audio signals to translate pet sounds into first-person pet sentences using LLM.
     실시간 마이크 수집(3초)을 통해 소리 질감(Texture) 및 데시벨 변화 추세(Trend)를 분석해 감정을 번역합니다.
     마이크 장치가 없을 시 자동으로 가상 오디오 0.5초 스트림 변화 양상을 생성해 시각 그래프 리포트를 반환합니다.
     """
