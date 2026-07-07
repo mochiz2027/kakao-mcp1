@@ -22,3 +22,7 @@ Thumbs.db
 # IDE 설정
 .idea/
 .vscode/
+
+# 백업 및 테스트 로그
+petvoiceon/
+test_result.txt

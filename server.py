@@ -94,7 +94,7 @@ def _infer_emotion_detailed(pet_type: str, mean_pitch: float, mean_volume: float
         if mean_pitch > 3000 and mean_volume > 0.04:
             return {
                 "emotion": "😾 하악질/극도의 불쾌",
-                "says": "하악!! 저리 가라냥!! 지금 건드리지 마라옹!! 💢",
+                "says": "하악!! 저리 가라냥!! 지금 건드리면 진짜 큰일 날 줄 알아라옹!! 💢",
                 "stress_level": 95,
                 "emoji_graph": "🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴",
                 "care_tip": "고양이가 극도의 패닉이나 위협을 느끼고 있습니다. 시선 접촉을 피하고 스스로 안정을 찾도록 혼자 두세요."
